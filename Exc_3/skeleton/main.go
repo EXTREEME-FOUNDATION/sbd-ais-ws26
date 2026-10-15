@@ -32,12 +32,20 @@ func main() {
 
 	// Render Frontend
 	staticFS, err := fs.Sub(embeddedFrontend, "frontend")
+	docsFS, err := fs.Sub(embeddedFrontend, "docs")
 	if err != nil {
 		log.Fatal(err)
 	}
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFileFS(w, r, staticFS, "index.html")
 	})
+	r.Get("/docs/swagger.go", func(w http.ResponseWriter, r *http.Request) {
+
+		w.Header().Set("Content-Type", "application/json")
+		http.ServeFileFS(w, r, docsFS, "swagger.go")
+		//http.ServeFileFS(w, r, staticFS, "index.html")
+	})
+
 	// Menu Routes
 	r.Get("/api/menu", rest.GetMenu(db))
 	// Order Routes
@@ -46,6 +54,10 @@ func main() {
 	r.Post("/api/order", rest.PostOrder(db))
 	// OpenAPI Routes
 	r.Get("/openapi/*", httpSwagger.WrapHandler)
+
+	r.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:3000/docs/swagger.json"),
+	))
 
 	slog.Info("⚡⚡⚡ Order System is up and running ⚡⚡⚡")
 	err = http.ListenAndServe(":3000", r)
