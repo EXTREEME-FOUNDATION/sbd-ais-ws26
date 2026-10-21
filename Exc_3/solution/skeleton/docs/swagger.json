@@ -23,7 +23,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Drink"
+                                "$ref": "#/definitions/Drink"
                             }
                         }
                     }
@@ -49,7 +49,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Order"
+                            "$ref": "#/definitions/Order"
                         }
                     }
                 ],
@@ -78,7 +78,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Order"
+                                "$ref": "#/definitions/Order"
                             }
                         }
                     }
@@ -100,7 +100,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Order"
+                                "$ref": "#/definitions/Order"
                             }
                         }
                     }
@@ -109,7 +109,7 @@
         }
     },
     "definitions": {
-        "model.Drink": {
+        "Drink": {
             "type": "object",
             "properties": {
                 "description": {
@@ -126,7 +126,7 @@
                 }
             }
         },
-        "model.Order": {
+        "Order": {
             "type": "object",
             "properties": {
                 "amount": {

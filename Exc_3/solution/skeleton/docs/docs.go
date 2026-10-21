@@ -32,7 +32,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Drink"
+                                "$ref": "#/definitions/Drink"
                             }
                         }
                     }
@@ -58,7 +58,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Order"
+                            "$ref": "#/definitions/Order"
                         }
                     }
                 ],
@@ -87,7 +87,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Order"
+                                "$ref": "#/definitions/Order"
                             }
                         }
                     }
@@ -109,7 +109,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Order"
+                                "$ref": "#/definitions/Order"
                             }
                         }
                     }
@@ -118,7 +118,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.Drink": {
+        "Drink": {
             "type": "object",
             "properties": {
                 "description": {
@@ -135,7 +135,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.Order": {
+        "Order": {
             "type": "object",
             "properties": {
                 "amount": {

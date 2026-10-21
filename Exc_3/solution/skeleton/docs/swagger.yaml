@@ -1,5 +1,5 @@
 definitions:
-  model.Drink:
+  Drink:
     properties:
       description:
         type: string
@@ -10,7 +10,7 @@ definitions:
       price:
         type: number
     type: object
-  model.Order:
+  Order:
     properties:
       amount:
         type: integer
@@ -37,7 +37,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Drink'
+              $ref: '#/definitions/Drink'
             type: array
       tags:
       - Menu
@@ -52,7 +52,7 @@ paths:
         name: b
         required: true
         schema:
-          $ref: '#/definitions/model.Order'
+          $ref: '#/definitions/Order'
       produces:
       - application/json
       responses:
@@ -72,7 +72,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Order'
+              $ref: '#/definitions/Order'
             type: array
       tags:
       - Order
@@ -86,7 +86,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Order'
+              $ref: '#/definitions/Order'
             type: array
       tags:
       - Order

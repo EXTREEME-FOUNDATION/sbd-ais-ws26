@@ -22,6 +22,9 @@ import (
 //go:embed frontend/*
 var embeddedFrontend embed.FS
 
+//go:embed docs/*
+var embeddedDocs embed.FS
+
 // @title				Order System
 // @description			This system enables drink orders and should not be used for the forbidden Hungover Games.
 // @contact.name		Your Name
@@ -32,17 +35,17 @@ func main() {
 
 	// Render Frontend
 	staticFS, err := fs.Sub(embeddedFrontend, "frontend")
-	docsFS, err := fs.Sub(embeddedFrontend, "docs")
+	docsFS, err := fs.Sub(embeddedDocs, "docs")
 	if err != nil {
 		log.Fatal(err)
 	}
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFileFS(w, r, staticFS, "index.html")
 	})
-	r.Get("/docs/swagger.go", func(w http.ResponseWriter, r *http.Request) {
-
+	r.Get("/docs/swagger.json", func(w http.ResponseWriter, r *http.Request) {
+		print("Serving swagger.json")
 		w.Header().Set("Content-Type", "application/json")
-		http.ServeFileFS(w, r, docsFS, "swagger.go")
+		http.ServeFileFS(w, r, docsFS, "swagger.json")
 		//http.ServeFileFS(w, r, staticFS, "index.html")
 	})
 
