@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drink Menu & Orders</title>
+    <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
+    <style>
+        h1, h2 {
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #f4f4f475;
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        #totalledChart {
+            min-height: 500px;
+            width: 70%;
+        }
+        #ordersChart {
+            min-height: 500px;
+            width:70%;
+        }
+
+        @property --grid-gap {
+            syntax: "<length>";
+            initial-value: 12px;
+            inherits: true;
+        }
+        .main-svg[style^="background:"] {
+            background: #e9fdff94 !important;
+        }
+
+        body {
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+            margin: 20px;
+
+            --grid-hue: 250; /* color of background/lines */
+            --grid-gap: 12px; /* size of the minor squares (line gaps) */
+            --grid-opacity: 0.35; /* opacity of crosses */
+            
+            --grid-border: 16px;
+            
+            --grid-light: hsl(var(--grid-hue), 58%, 82%);
+            --grid-dark: hsl(var(--grid-hue), 20%, 18%);
+            --grid-bg: light-dark( var(--grid-light), var(--grid-dark) );
+            
+            --grid-minor: light-dark( hsl(var(--grid-hue) 60% 20% / calc(var(--grid-opacity) * 0.125)), hsl(var(--grid-hue) 60% 80% / calc(var(--grid-opacity) * 0.125)) );
+            --grid-major: light-dark( hsl(var(--grid-hue) 60% 20% / calc(var(--grid-opacity) * 0.35)), hsl(var(--grid-hue) 60% 80% / calc(var(--grid-opacity) * 0.35)) );
+            --grid-cross: light-dark( hsl(var(--grid-hue) 60% 20% / var(--grid-opacity)), hsl(var(--grid-hue) 60% 80% / var(--grid-opacity)) );
+            
+            --paper-lines-y: linear-gradient(var(--grid-minor) 0px 1px,transparent 1px var(--grid-gap));
+            --paper-lines-x: linear-gradient(to right, var(--grid-minor) 0px 1px,transparent 1px var(--grid-gap));
+            --paper-lines-y-major: linear-gradient(var(--grid-major) 0px 1px,transparent 1px calc(var(--grid-gap) * 5));
+            --paper-lines-x-major: linear-gradient(to right, var(--grid-major) 0px 1px,transparent 1px calc(var(--grid-gap) * 5));
+            --paper-cross-y: linear-gradient(var(--grid-cross) 0px 1px,transparent 1px calc(var(--grid-gap) * 5));
+            --paper-cross-x: linear-gradient(to right, var(--grid-cross) 0px 1px,transparent 1px calc(var(--grid-gap) * 5));
+            --paper-cross-mask: radial-gradient(circle at center, transparent calc(var(--grid-gap)/2), var(--grid-bg) calc(var(--grid-gap)/2) 100%);
+            
+            --paper-gradient: 
+                var(--paper-lines-y), 
+                var(--paper-lines-x),
+                var(--paper-lines-y-major), 
+                var(--paper-lines-x-major), 
+                var(--paper-cross-mask),
+                var(--paper-cross-y), 
+                var(--paper-cross-x);
+            
+            background-size:
+                var(--grid-gap) var(--grid-gap), 
+                var(--grid-gap) var(--grid-gap), 
+                calc(var(--grid-gap) * 5) calc(var(--grid-gap) * 5),
+                calc(var(--grid-gap) * 5) calc(var(--grid-gap) * 5),
+                calc(var(--grid-gap) * 5) calc(var(--grid-gap) * 5),
+                calc(var(--grid-gap) * 5) calc(var(--grid-gap) * 5),
+                calc(var(--grid-gap) * 5) calc(var(--grid-gap) * 5);
+            
+            background-repeat: 
+                repeat, 
+                repeat, 
+                repeat, 
+                repeat, 
+                repeat,
+                repeat, 
+                repeat;
+            
+            background-position: 
+                var(--grid-border) var(--grid-border),
+                var(--grid-border) var(--grid-border),
+                var(--grid-border) var(--grid-border),
+                var(--grid-border) var(--grid-border),
+                calc(var(--grid-border) - var(--grid-gap) * 2.5) calc(var(--grid-border) - var(--grid-gap) * 2.5),
+                var(--grid-border) var(--grid-border),
+                var(--grid-border) var(--grid-border);
+            
+            background-color: var(--grid-bg);
+            background-image: var(--paper-gradient);
+            
+            box-shadow: inset 0 0 0 var(--grid-border) var(--grid-bg), inset 0 0 0 calc( var(--grid-border) + 1px) var(--grid-cross), inset 0 0 0 calc( var(--grid-border) + 1px) var(--bg2);
+            padding: var(--grid-border);
+            
+            min-width: 100svw;
+            min-height: 100svh;
+            
+            transition: --grid-gap 0.2s ease-in-out;
+        }
+
+        :root {
+            --bg-color-1: #121212;
+            --bg-color-2: #ffd433;
+            --bg-color-3: #ff90e8;
+            --padding: 1rem 1rem;
+            --font-family: monospace;
+            --step: 0.5rem;
+        }
+
+        
+
+        button {
+            --active: 0;
+            color: white;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+            font-family: var(--font-family);
+            font-weight: bold;
+            border: 0;
+            background: transparent;
+            width: 20%;
+        }
+
+        button:is(:hover, :focus-visible) {
+            --active: 1;
+        }
+
+        button:active {
+            --active: 0.5;
+        }
+
+        button span:first-of-type {
+            padding: var(--padding);
+        }
+
+        button span:not(:first-of-type) {
+            position: absolute;
+        }
+
+        [aria-hidden="true"] {
+            color: transparent;
+        }
+
+        button span {
+            inset: 0;
+            display: grid;
+            background: var(--bg);
+            place-items: center;
+            transition: 0.2s ease;
+            border: 2px solid black;
+            translate:
+            calc((var(--active) * var(--coefficient, 0)) * (var(--step) * -1))
+            calc((var(--active) * var(--coefficient, 0)) * (var(--step) * -1));
+        }
+
+        span:nth-of-type(1) {
+            --bg: var(--bg-color-3);
+        }
+
+        span:nth-of-type(2) {
+            --coefficient: 1;
+            --bg: var(--bg-color-2);
+        }
+
+        span:nth-of-type(3) {
+            --coefficient: 2;
+            --bg: var(--bg-color-1);
+        }
+
+        
+
+
+    </style>
+
+    <script>
+        function GoToDocs() {
+            window.open("/openapi/index.html", "_blank");
+        }
+    </script>
+</head>
+
+
+        
+<body>
+
+
+
+<h1>Drink Menu</h1>
+<ul id="menu-list">Loading menu...</ul>
+
+<button onclick="GoToDocs()">
+<span aria-hidden="true">Go to API Docs</span>
+<span></span>
+<span>Go to API Docs</span>
+</button>
+
+<h2>Total Orders</h2>
+<div id="totalledChart"></div>
+
+<h2>Order History </h2>
+<div id="ordersChart"></div>
+
+<script>
+    const barColors = ['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854', '#ffd92f', '#e5c494', '#b3b3b3'];
+
+    const menuList = document.getElementById("menu-list");
+    const totalledChartDiv = document.getElementById("totalledChart");
+    const ordersChartDiv = document.getElementById("ordersChart");
+
+    const drinkMap = new Map(); // drink_id => drink object
+
+    // Fetch and display the drink menu
+    function fetchAll(){
+        fetch("/api/menu")
+            .then(res => res.json())
+            .then(drinks => {
+                menuList.innerHTML = "";
+                drinks.forEach(drink => {
+                    drinkMap.set(drink.id, drink);
+                    const li = document.createElement("li");
+                    li.textContent = `${drink.name} - $${drink.price.toFixed(2)} (${drink.description})`;
+                    menuList.appendChild(li);
+                });
+
+                // After loading drinks, load orders
+                loadOrderTotalled();
+                loadOrders();
+            })
+            .catch(err => {
+                console.error("Failed to load menu:", err);
+                menuList.innerHTML = "<li>Error loading menu.</li>";
+            });
+    }
+    
+
+    setInterval(() => {
+        fetchAll();
+    }, 1000); // Refresh every 1 second
+
+    function loadOrderTotalled() {
+        fetch("/api/order/totalled")
+            .then(res => res.json())
+            .then(orders => {
+                const labels = [];
+                const values = [];
+                const total_cost = [];
+
+                for (const order of orders) {
+                    const drink = drinkMap.get(parseInt(order.drink_id));
+                    if (drink) {
+                        labels.push(drink.name);
+                        values.push(order.total_amount_ordered);
+                        total_cost.push((drink.price * order.total_amount_ordered).toFixed(2) + " €");
+                    }
+                }
+
+                if (labels.length === 0) {
+                    totalledChartDiv.textContent = "No orders to display.";
+                    return;
+                }
+
+                const data = [{
+                    x: labels,
+                    y: values,
+                    type: 'bar',
+                    text: total_cost,
+                    textposition: 'auto',
+                    marker: {
+                        color: barColors,
+                        line: {
+                            color: 'rgba(0, 0, 0, 0.7)',
+                            width: 0.5
+                        }
+                    }
+                }];
+
+                const layout = {
+                    title: 'Total Drink Orders',
+                    xaxis: {title: 'Drink'},
+                    yaxis: {title: 'Number of Orders', dtick: 1},
+                    margin: {t: 50, l: 50, r: 30, b: 80}
+                };
+
+                Plotly.newPlot('totalledChart', data, layout, {responsive: true});
+            })
+            .catch(err => {
+                console.error("Failed to load orders:", err);
+                totalledChartDiv.textContent = "Error loading orders.";
+            });
+    }
+
+    function loadOrders() {
+        fetch("/api/order/all")
+            .then(res => res.json())
+            .then(orders => {
+                if (orders.length === 0) {
+                    ordersChartDiv.textContent = "No orders to display.";
+                    return;
+                }
+
+                // Step 1: Sort by time
+                orders.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+                // Step 2: Accumulate orders over time
+                const timeMap = new Map();
+                let cumulativeTotal = 0;
+
+                for (const order of orders) {
+                    const time = new Date(order.created_at);
+                    const timeKey = time.toISOString().slice(0, 16); // Round to minute
+                    const existing = timeMap.get(timeKey) || 0;
+                    timeMap.set(timeKey, existing + order.amount);
+                }
+
+                // Step 3: Generate cumulative data
+                const sortedTimes = Array.from(timeMap.keys()).sort();
+                const times = [];
+                const cumulativeValues = [];
+
+                for (const timeKey of sortedTimes) {
+                    cumulativeTotal += timeMap.get(timeKey);
+                    times.push(timeKey);
+                    cumulativeValues.push(cumulativeTotal);
+                }
+
+                // Step 4: Plot
+                const trace = {
+                    x: times,
+                    y: cumulativeValues,
+                    mode: 'lines+markers',
+                    type: 'scatter',
+                    name: 'Cumulative Orders',
+                    line: { shape: 'linear', color: 'blue' }
+                };
+
+                const layout = {
+                    title: 'Cumulative Orders Over Time',
+                    xaxis: { title: 'Time' },
+                    yaxis: { title: 'Total Orders' }
+                };
+
+                Plotly.newPlot('ordersChart', [trace], layout);
+            })
+            .catch(err => {
+                console.error("Failed to load orders:", err);
+                ordersChartDiv.textContent = "Error loading orders.";
+            });
+    }
+</script>
+</body>
+</html>

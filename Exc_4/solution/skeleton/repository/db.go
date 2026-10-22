@@ -82,6 +82,26 @@ func prepopulate(dbConn *gorm.DB) error {
 	// create drink menu
 	// todo create drinks
 	// todo create orders
+	//ctx := context.Background()
+	dbConn.AutoMigrate(model.Drink{}, model.Order{})
+	//gorm.G[model.Drink](dbConn).Create(ctx, &model.Drink{Name: "Coke", Price: 1.50})
+	dbConn.Create([]model.Drink{
+		{Name: "Coke", Price: 1.50},
+		{Name: "Pepsi", Price: 1.50},
+		{Name: "Sprite", Price: 1.50},
+		{Name: "Fanta", Price: 1.50},
+	})
+	dbConn.Create([]model.Order{
+		{DrinkID: 1, Amount: 2},
+		{DrinkID: 2, Amount: 3},
+		{DrinkID: 3, Amount: 1},
+		{DrinkID: 4, Amount: 5},
+		{DrinkID: 1, Amount: 1},
+		{DrinkID: 2, Amount: 2},
+		{DrinkID: 3, Amount: 3},
+		{DrinkID: 4, Amount: 4},
+	})
+
 	// GORM documentation can be found here: https://gorm.io/docs/index.html
 
 	return nil
