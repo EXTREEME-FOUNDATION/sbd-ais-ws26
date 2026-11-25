@@ -33,6 +33,7 @@ However, if the lake is gigantic, then the initial querry to determine the state
 
 -> This would also make concurrency easier (e.g.: because of the state file) and faster, since every reader wouldn't need to scan the entire lake to determine its offset.
 
+(Note to self: adding #[0-9]* to the end of a commit references pull requests on main apparently.)
 
 # Runs
 
