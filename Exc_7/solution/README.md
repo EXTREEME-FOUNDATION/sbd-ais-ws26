@@ -45,9 +45,9 @@ reset: lake, staging and state deleted
 | 1 first run | 2,000,000 | 0 | 0 | 0 | 7.3s | PASS |
 | 2 new records arrive, run again | 2,100,000 | 0 | 0 | 0 | 2.2s | PASS |
 | 3 nothing new, run again | 2,100,000 | 0 | 0 | 0 | 0.1s | PASS |
-| 4 run stops WHILE writing: right after  | 2,132,182     |       0        0      67,818         PASS |
+| 4 run stops WHILE writing: right after  | 2,132,182 | 0 | 0 | 67,818 |  | PASS |
 |   ... then the next run | 2,232,182 | 32,182 | 0 | 0 | 2.2s | *FAIL* |
-| 5 run stops AFTER writing: right after | 2,332,182 | 32,182 | 0 | 0 | *FAIL* |
+| 5 run stops AFTER writing: right after | 2,332,182 | 32,182 | 0 | 0 |   | *FAIL* |
 |   ... then the next run | 2,432,182 | 132,182 | 0 | 0 | 2.2s | *FAIL* |
 
 Exactly once after every run: *NO* — see the rows marked *FAIL*
@@ -139,9 +139,9 @@ reset: lake, staging and state deleted
 | 1 first run | 2,300,000 | 0 | 0 | 0 | 10.8s | PASS |
 | 2 new records arrive, run again | 2,400,000 | 0 | 0 | 0 | 3.0s | PASS |
 | 3 nothing new, run again | 2,400,000 | 0 | 0 | 0 | 0.1s | PASS |
-| 4 run stops WHILE writing: right after | 2,400,000 | 0 | 0 | 100,000 | PASS |
+| 4 run stops WHILE writing: right after | 2,400,000 | 0 | 0 | 100,000 |  | PASS |
 |   ... then the next run | 2,500,000 | 0 | 0 | 0 | 2.1s | PASS |
-| 5 run stops AFTER writing: right after | 2,500,000 | 0 | 0 | 100,000 | PASS |
+| 5 run stops AFTER writing: right after | 2,500,000 | 0 | 0 | 100,000 |  | PASS |
 |   ... then the next run | 2,600,000 | 0 | 0 | 0 | 2.7s | PASS |
 
 Exactly once after every run: *YES*
@@ -229,14 +229,14 @@ Exactly once after every run: *YES*
 
 reset: lake, staging and state deleted
 
-| situation | in lake | duplicates | missing | not | loaded | run | check |
+| situation | in lake | duplicates | missing | not loaded | run | check |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 first run | 2,600,000 | 0 | 0 | 0 | 12.1s | PASS |
 | 2 new records arrive, run again | 2,700,000 | 0 | 0 | 0 | 2.9s | PASS |
 | 3 nothing new, run again | 2,700,000 | 0 | 0 | 0 | 0.1s | PASS |
-| 4 run stops WHILE writing: right after | 2,732,110 | 0 | 0 | 67,890 | PASS |
+| 4 run stops WHILE writing: right after | 2,732,110 | 0 | 0 | 67,890 |  | PASS |
 |   ... then the next run | 2,800,000 | 0 | 0 | 0 | 2.8s | PASS |
-| 5 run stops AFTER writing: right after | 2,900,000 | 0 | 0 | 0 | PASS |
+| 5 run stops AFTER writing: right after | 2,900,000 | 0 | 0 | 0 |  | PASS |
 |   ... then the next run | 2,900,000 | 0 | 0 | 0 | 1.5s | PASS |
 
 Exactly once after every run: YES
